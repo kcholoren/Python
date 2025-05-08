@@ -9,7 +9,7 @@ import config  # Import the configuration file
 
 # General configuration
 # [overleaf-toolkit-location]/data/overleaf/data/user_files
-SOURCE_DIR = "/root/overleaf-toolkit/data/overleaf/data/user_files"
+SOURCE_DIR = "/root/overleaf-toolkit"
 GITHUB_REPO_LOCAL = "/root/overleaf-backups"
 # mongo server
 SERVER="localhost"
@@ -200,7 +200,7 @@ for project in projects:
                 project_id=project_id,
                 projects_data=projects,
                 docs_data=docs_all,
-                source_dir=SOURCE_DIR,
+                source_dir=SOURCE_DIR+"/data/overleaf/data/user_files",
                 dest_dir=temp_dir
             )
 
