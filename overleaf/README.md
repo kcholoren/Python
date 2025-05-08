@@ -39,7 +39,7 @@ Before running the script, you need to modify the `config.py` file to include yo
     SOURCE_DIR = "/path/to/overleaf/toolkit"
     GITHUB_REPO_LOCAL = "/path/to/cloned/repository"
     SERVER = "overleaf_server_name"
-    PORT = overleaf_server_port
+    PORT = overleaf_mongo_port
     CONTAINER = "overleaf_container_name"
 7. Replace the placeholder values with your actual credentials and paths:
     - `"your_smtp_server_here"`: The address of your SMTP server.
@@ -48,7 +48,7 @@ Before running the script, you need to modify the `config.py` file to include yo
     - `"recipient_email_here"`: The email address to receive notifications.
     - `"/path/to/overleaf/toolkit"`: The directory where the Overleaf Toolkit is installed.
     - `"/path/to/cloned/repository"`: The directory where the GitHub repository was cloned.
-    - `"overleaf_server_name"`, `overleaf_server_port`, and `"overleaf_container_name"`: Update these if you did not use the default names during the Overleaf Toolkit installation.
+    - `"overleaf_server_name"`, `overleaf_mongo_port`, and `"overleaf_container_name"`: Update these if you did not use the default names during the Overleaf Toolkit installation.
     ```
 ---
 
