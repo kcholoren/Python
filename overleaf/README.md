@@ -101,18 +101,14 @@ crontab -l
 ## Generating a GitHub Token
 
 1. Generate a personal access token:
-    - Go to **Settings** > **Developer settings** > **Personal access tokens** > **Tokens (classic)**.
+    - Go to **Settings** > **Developer settings** > **Personal access tokens** > **Fine-grained tokens**.
     - Click **Generate new token**.
     - Select the required scopes (e.g., `repo` for repository access).
+    - Repository access > Only select repositories, and select created repository.
+    - Permissions > Repository permissions, *Read access to metadata*, *Read and Write access to actions, code, commit statuses, pull requests, and workflows*.
     - Copy the generated token and store it in `config.py`.
 
 This token enables the script to make commits without requiring login credentials.
-
----
-
-## License
-
-This project is licensed under the MIT License. See the `LICENSE` file for details.
 
 ---
 
