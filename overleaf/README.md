@@ -9,15 +9,15 @@ This repository contains a Python script designed to automate the backup of proj
 ## Prerequisites
 
 - Python 3.x installed on your system.
-- Overleaf Community Edition installed on the same machine with the Overleaf Toolkit.
-- A GitHub account.
-- Access to an SMTP server for email notifications.
+- Overleaf Community Edition installed on the same machine with the [Overleaf Toolkit](https://github.com/overleaf/toolkit/).
+- A [GitHub](https://github.com) account.
+- Access to an [SMTP](https://en.wikipedia.org/wiki/Simple_Mail_Transfer_Protocol) server for email notifications.
 
 ---
 
 ## Configuration
 
-Before running the script, you need to modify the `config.py` file to include your credentials and other necessary variables.
+Before running the script, you must modify the `config.py` file to include your credentials and other necessary variables.
 
 1. Open the `config.py` file in a text editor.
 2. Locate and configure the following variables:
@@ -104,7 +104,7 @@ crontab -l
     - Go to **Settings** > **Developer settings** > **Personal access tokens** > **Fine-grained tokens**.
     - Click **Generate new token**.
     - Select the required scopes (e.g., `repo` for repository access).
-    - Repository access > Only select repositories, and select created repository.
+    - Repository access > Only select repositories, and select the created repository.
     - Permissions > Repository permissions, *Read access to metadata*, *Read and Write access to actions, code, commit statuses, pull requests, and workflows*.
     - Copy the generated token and store it in `config.py`.
 
