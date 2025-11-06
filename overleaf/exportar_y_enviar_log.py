@@ -5,6 +5,8 @@ from tempfile import TemporaryDirectory
 from shutil import rmtree, copytree, copy2
 from smtplib import SMTP
 from email.mime.text import MIMEText
+from email.utils import formataddr
+from hashlib import sha1
 import config  # Import the configuration file
 
 # General configuration
@@ -27,6 +29,12 @@ TO_EMAIL = "CONFIGURATE THIS"
 FROM_PASSWORD = config.smtp_pass
 environ["GIT_ASKPASS"] = config.git_token
 
+
+import logging
+
+# Configuración básica de logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Logs
 log = []
@@ -131,13 +139,18 @@ def export_mongo_collection(collection_name):
         "docker", "exec", "mongo",
         "mongoexport",
         "--db=sharelatex",
-        "-h", SERVER+":"+PORT,
+        f"-h={SERVER}:{PORT}",
         f"--collection={collection_name}",
         "--jsonArray"
     ]
     
-    result = run(cmd, capture_output=True, text=True, check=True)    
-    return loads(result.stdout)
+    try:
+        result = run(cmd, capture_output=True, text=True, check=True)
+        return loads(result.stdout)
+    except CalledProcessError as e:
+        raise RuntimeError(
+            f"Failed to export collection '{collection_name}': {e.stderr}"
+        )
 
 def git_commit_and_push_if_changed(repo_path, mensaje):
     """
@@ -166,14 +179,18 @@ def enviar_log_por_correo(asunto, cuerpo):
         cuerpo (str): Body of the email.
     """
     msg = MIMEText(cuerpo)
-    msg["Subject"] = asunto
-    msg["From"] = FROM_EMAIL
+    msg["Subject"] = asunto    
+    msg['From'] = formataddr(('Overleaf Backup script', 'overleaf-backups@CONFIGURATE THIS'))
+    msg["Reply-To"] = FROM_EMAIL
     msg["To"] = TO_EMAIL
 
-    with SMTP(SMTP_SERVER, SMTP_PORT) as server:
-        server.starttls()
-        server.login(FROM_EMAIL, FROM_PASSWORD)
-        server.send_message(msg)
+    try:
+        with SMTP(SMTP_SERVER, SMTP_PORT, timeout=20) as server:
+            server.starttls()
+            server.login(FROM_EMAIL, FROM_PASSWORD)
+            server.send_message(msg)
+    except Exception as e:
+        print(f" Failed to send email: {e}")
 
 # Export users collection
 users = export_mongo_collection("users")
@@ -192,6 +209,7 @@ for project in projects:
     owner_email = user_email_map.get(owner_id, "desconocido")
 
     mensaje_log = f"📁 {project_name} ({owner_email})"
+    logger.info(f"procesando {project_id}>{project_name}>{owner_email}")
 
     try:        
         with TemporaryDirectory() as temp_dir:
@@ -204,8 +222,10 @@ for project in projects:
                 dest_dir=temp_dir
             )
 
-            # repository path is [owner_email]/[project_name]
-            repo_dest = ospath.join(GITHUB_REPO_LOCAL, owner_email, project_name)
+            # repository path is [owner_email]/[project_name]__[short_id]
+            # project name could be not unique!!
+            short_id = sha1(project_id.encode()).hexdigest()[:7]
+            repo_dest = ospath.join(GITHUB_REPO_LOCAL, owner_email, f"{project_name}__{short_id}")
             if ospath.exists(repo_dest):
                 rmtree(repo_dest)
             # copy restored project to the repository path
@@ -218,6 +238,7 @@ for project in projects:
     except Exception as e:
         errores.append(f"❌ {mensaje_log} — Error: {e}")
         log.append(f"❌ {mensaje_log} — Error al procesar.")
+        logger.info(f"❌ {mensaje_log} — Error: {e}")
 
 # Send email with log
 asunto = "[Exportación Overleaf] "
@@ -231,4 +252,3 @@ else:
 
 
 enviar_log_por_correo(asunto, cuerpo)
-
