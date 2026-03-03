@@ -1,2 +1,6 @@
 git_token = "CONFIGURATE THIS"
 smtp_pass = "CONFIGURATE THIS"
+smtp_server = "CONFIGURATE THIS"
+smtp_port = "CONFIGURATE THIS"
+from_email = "CONFIGURATE THIS"
+to_email = "CONFIGURATE THIS"
