@@ -4,6 +4,9 @@
 
 This repository contains a Python script designed to automate the backup of projects from [Overleaf Community Edition](https://github.com/overleaf/). The script, named `exportar_y_enviar_log.py`, uses Docker to export the Mongo collections of all projects, including external files, and send logs via email. Below, you will find instructions on how to configure and use the script, including setting up the necessary credentials, scheduling it to run daily, and creating a GitHub repository with a personal access token.
 
+[UPDATE]
+The script, named `exportar_y_enviar_log.py`, is not working with new version 6 of Overleaf. Script named `export.py` is a new version that runs on new or upgraded versions of Overleaf.
+
 ---
 
 ## Prerequisites
